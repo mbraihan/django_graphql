@@ -1,5 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
+from graphql.error.base import GraphQLError
 from crud_app.crud_api.models import Actor, Movie
 
 class ActorType(DjangoObjectType):
@@ -92,21 +93,23 @@ class CreateMovie(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, input = None):
+        print("input",input)
         ok = True
         actors = []
         for actor_input in input.actors:
-            actor = Actor.objects.get(pk = actor_input.id)
-            if actor in None:
-                return CreateMovie(ok = False, movie = None)
-            actors.append(actor)
+            actor = Actor.objects.filter(id = actor_input.id).first()
+            print("actor",actors)
+            if actor:
+                actors.append(actor)
+                print("actor",actors)
 
-        movie_instance = Movie(
-            title = input.title,
-            year = input.year
-        )
-        movie_instance.save()
-        movie_instance.actors.set(actors)
-        return CreateMovie(ok = ok, movie = movie_instance)
+            else:
+                raise GraphQLError("Actor not Found")
+        movie = None
+        for actor in actors:
+            movie = Movie.objects.create(title=input.title,year=input.year)
+            movie.actors.add(Actor.objects.filter(id = actor_input.id).first())
+        return CreateMovie(ok = True, movie=movie)
 
 class UpdateMovie(graphene.Mutation):
     class Arguments:

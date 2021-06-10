@@ -1,2 +1,5 @@
 .vscode
-../__pycache
+crud_app/__pycache__/
+crud_app/crud_api/__pycache__/
+crud_app/__pycache__/urls.cpython-39.pyc
+crud_app/__pycache__/settings.cpython-39.pyc
