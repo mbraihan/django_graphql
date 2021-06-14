@@ -56,3 +56,31 @@ query getActors {
       }
     }
   }
+
+
+  mutation createEmployee {
+    createEmployee(input: {firstName: "Tom", middleName: "J", lastName: "Hanks", gender: "Male", address: "US", salary: "100.00"}) {
+      ok
+      employee {
+        id
+        firstName
+        middleName
+        lastName
+        gender
+        address
+        salary
+      }
+    }
+  }
+
+  query getEmployess {
+    employees {
+      id
+      firstName
+      middleName
+      lastName
+      gender
+      address
+      salary
+    }
+  }
